@@ -5,15 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-include ':animated-base'
-include ':animated-base-test'
-include ':animated-drawable'
-include ':animated-gif'
-include ':animated-gif-lite'
-include ':animated-webp'
-include ':drawee'
-include ':drawee-backends:drawee-pipeline'
-include ':drawee-span'
 include ':fbcore'
 include ':imagepipeline'
 include ':imagepipeline-backends:imagepipeline-okhttp3'

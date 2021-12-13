@@ -1,6 +1,6 @@
 LOCAL_PATH:= $(call my-dir)
 
-JPEGTURBO_CFLAGS := -DJPEG_LIB_VERSION=80 -Wno-attributes
+JPEGTURBO_CFLAGS := -DJPEG_LIB_VERSION=80 -Wno-attributes -D__ARM_HAVE_NEON
 
 JPEGTURBO_SRC_FILES := \
 	jcapimin.c jcapistd.c jccoefct.c jccolor.c \
@@ -17,8 +17,42 @@ JPEGTURBO_SRC_FILES := \
 # switch between SIMD supported and non supported architectures
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 JPEGTURBO_SRC_FILES += \
-	simd/jsimd_arm_neon.S.neon \
-	simd/jsimd_arm.c
+	simd/arm/aarch32/jsimd_neon.S \
+	simd/arm/jccolor-neon.c \
+	simd/arm/jdcolor-neon.c \
+	simd/arm/jdsample-neon.c \
+	simd/arm/jidctred-neon.c \
+	simd/arm/jidctfst-neon.c \
+	simd/arm/jdmerge-neon.c \
+	simd/arm/jfdctint-neon.c \
+	simd/arm/jidctint-neon.c \
+	simd/arm/jcsample-neon.c \
+	simd/arm/jfdctfst-neon.c \
+	simd/arm/aarch32/jchuff-neon.c\
+	simd/arm/jquanti-neon.c\
+	simd/arm/jcphuff-neon.c \
+	simd/arm/jcgray-neon.c \
+	simd/arm/aarch32/jsimd.c
+
+else ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
+JPEGTURBO_SRC_FILES += \
+	simd/arm/aarch64/jsimd_neon.S \
+	simd/arm/jccolor-neon.c \
+	simd/arm/jdcolor-neon.c \
+	simd/arm/jdsample-neon.c \
+	simd/arm/jidctred-neon.c \
+	simd/arm/jidctfst-neon.c \
+	simd/arm/jdmerge-neon.c \
+	simd/arm/jfdctint-neon.c \
+	simd/arm/jidctint-neon.c \
+	simd/arm/jcsample-neon.c \
+	simd/arm/jfdctfst-neon.c \
+	simd/arm/aarch64/jchuff-neon.c\
+	simd/arm/jquanti-neon.c\
+	simd/arm/jcphuff-neon.c \
+	simd/arm/jcgray-neon.c \
+	simd/arm/aarch64/jsimd.c
+
 else
 JPEGTURBO_SRC_FILES += jsimd_none.c
 endif
@@ -26,6 +60,7 @@ endif
 # fb_jpegturbo module
 include $(CLEAR_VARS)
 LOCAL_MODULE:= fb_jpegturbo
+LOCAL_ARM_NEON := true
 LOCAL_SRC_FILES := $(JPEGTURBO_SRC_FILES)
 LOCAL_CFLAGS := $(JPEGTURBO_CFLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
